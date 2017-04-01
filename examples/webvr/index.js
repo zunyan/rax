@@ -1,6 +1,8 @@
+/* global THREE */
+
 class Demo {
 
-  static get CAMERA_SETTINGS () {
+  static get CAMERA_SETTINGS() {
     return {
       viewAngle: 45,
       near: 0.1,
@@ -8,7 +10,7 @@ class Demo {
     };
   }
 
-  constructor () {
+  constructor() {
     this._width;
     this._height;
     this._renderer;
@@ -33,7 +35,7 @@ class Demo {
     requestAnimationFrame(this._update);
   }
 
-  _update () {
+  _update() {
     const ROTATION_VALUE = 4;
     const time = window.performance.now() * 0.0001;
 
@@ -43,12 +45,12 @@ class Demo {
     this._render();
   }
 
-  _render () {
+  _render() {
     this._renderer.render(this._scene, this._camera);
     requestAnimationFrame(this._update);
   }
 
-  _onResize () {
+  _onResize() {
     this._width = window.innerWidth;
     this._height = window.innerHeight;
     this._aspect = this._width / this._height;
@@ -63,20 +65,20 @@ class Demo {
     this._camera.updateProjectionMatrix();
   }
 
-  _addEventListeners () {
+  _addEventListeners() {
     window.addEventListener('resize', this._onResize);
   }
 
-  clearContainer () {
+  clearContainer() {
     this._container.innerHTML = '';
   }
 
-  createRenderer () {
+  createRenderer() {
     this._renderer = new THREE.WebGLRenderer();
     this._container.appendChild(this._renderer.domElement);
   }
 
-  createCamera () {
+  createCamera() {
     this._settings = Demo.CAMERA_SETTINGS;
     this._camera = new THREE.PerspectiveCamera(
         this._settings.viewAngle,
@@ -86,11 +88,11 @@ class Demo {
     );
   }
 
-  createScene () {
+  createScene() {
     this._scene = new THREE.Scene();
   }
 
-  createMeshes () {
+  createMeshes() {
     const WIDTH = 1;
     const HEIGHT = 1;
     const DEPTH = 1;
@@ -120,7 +122,7 @@ class Demo {
 }
 
 class DemoVR extends Demo {
-  constructor () {
+  constructor() {
     super();
 
     this._onResize = this._onResize.bind(this);
@@ -143,7 +145,7 @@ class DemoVR extends Demo {
     this._getDisplays();
   }
 
-  _addVREventListeners () {
+  _addVREventListeners() {
     window.addEventListener('vrdisplayactivate', _ => {
       this._activateVR();
     });
@@ -153,7 +155,7 @@ class DemoVR extends Demo {
     });
   }
 
-  _getDisplays () {
+  _getDisplays() {
     return navigator.getVRDisplays().then(displays => {
       // Filter down to devices that can present.
       displays = displays.filter(display => display.capabilities.canPresent);
@@ -174,15 +176,15 @@ class DemoVR extends Demo {
     });
   }
 
-  _showNoPresentError () {
+  _showNoPresentError() {
     console.error(`Unable to present with this device ${this._vr.display}`);
   }
 
-  _showWebVRNotSupportedError () {
+  _showWebVRNotSupportedError() {
     console.error('WebVR not supported');
   }
 
-  _createPresentationButton () {
+  _createPresentationButton() {
     this._button = document.createElement('button');
     this._button.classList.add('vr-toggle');
     this._button.textContent = 'Enable VR';
@@ -192,7 +194,7 @@ class DemoVR extends Demo {
     document.body.appendChild(this._button);
   }
 
-  _deactivateVR () {
+  _deactivateVR() {
     if (!this._vr.display) {
       return;
     }
@@ -205,7 +207,7 @@ class DemoVR extends Demo {
     return;
   }
 
-  _activateVR () {
+  _activateVR() {
     if (!this._vr.display) {
       return;
     }
@@ -218,7 +220,7 @@ class DemoVR extends Demo {
     });
   }
 
-  _toggleVR () {
+  _toggleVR() {
     if (this._vr.display.isPresenting) {
       return this._deactivateVR();
     }
@@ -226,7 +228,7 @@ class DemoVR extends Demo {
     return this._activateVR();
   }
 
-  _render () {
+  _render() {
     if (this._disabled || !(this._vr.display && this._vr.display.isPresenting)) {
       // Ensure that we switch everything back to auto for non-VR mode.
       this._onResize();
@@ -295,7 +297,7 @@ class DemoVR extends Demo {
     this._vr.display.submitFrame();
   }
 
-  _renderEye (viewMatrix, projectionMatrix, viewport) {
+  _renderEye(viewMatrix, projectionMatrix, viewport) {
     // Set the left or right eye half.
     this._renderer.setViewport(viewport.x, viewport.y, viewport.w, viewport.h);
 

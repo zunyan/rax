@@ -51,6 +51,7 @@ module.exports = {
     "__weex_define__": true,
     "__weex_require__": true,
     "__weex_document__": true,
+    "VRFrameData": true,
     "WXEnvironment": true,
     "jasmine": true
   },
