@@ -194,7 +194,7 @@ dist(getConfig(
       frameworkComment: '',
     },
     {
-      presets: ['es2015'],
+      presets: ['es2015', 'rax'],
       ignore: [
         'dist/'
       ]

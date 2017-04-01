@@ -19,7 +19,7 @@ var DPDB_CACHE = require('./dpdb-cache.js');
 var Util = require('../util.js');
 
 // Online DPDB URL.
-var ONLINE_DPDB_URL = 'https://storage.googleapis.com/cardboard-dpdb/dpdb.json';
+// var ONLINE_DPDB_URL = 'https://storage.googleapis.com/cardboard-dpdb/dpdb.json';
 
 /**
  * Calculates device parameters based on the DPDB (Device Parameter Database).
@@ -38,26 +38,26 @@ function Dpdb(fetchOnline, onDeviceParamsUpdated) {
   this.recalculateDeviceParams_();
 
   // XHR to fetch online DPDB file, if requested.
-  if (fetchOnline) {
-    // Set the callback.
-    this.onDeviceParamsUpdated = onDeviceParamsUpdated;
-
-    var xhr = new XMLHttpRequest();
-    var obj = this;
-    xhr.open('GET', ONLINE_DPDB_URL, true);
-    xhr.addEventListener('load', function() {
-      obj.loading = false;
-      if (xhr.status >= 200 && xhr.status <= 299) {
-        // Success.
-        obj.dpdb = JSON.parse(xhr.response);
-        obj.recalculateDeviceParams_();
-      } else {
-        // Error loading the DPDB.
-        console.error('Error loading online DPDB!');
-      }
-    });
-    xhr.send();
-  }
+  // if (fetchOnline) {
+  //   // Set the callback.
+  //   this.onDeviceParamsUpdated = onDeviceParamsUpdated;
+  //
+  //   var xhr = new XMLHttpRequest();
+  //   var obj = this;
+  //   xhr.open('GET', ONLINE_DPDB_URL, true);
+  //   xhr.addEventListener('load', function() {
+  //     obj.loading = false;
+  //     if (xhr.status >= 200 && xhr.status <= 299) {
+  //       // Success.
+  //       obj.dpdb = JSON.parse(xhr.response);
+  //       obj.recalculateDeviceParams_();
+  //     } else {
+  //       // Error loading the DPDB.
+  //       console.error('Error loading online DPDB!');
+  //     }
+  //   });
+  //   xhr.send();
+  // }
 }
 
 // Returns the current device parameters.

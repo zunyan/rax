@@ -12,4 +12,8 @@ if (!global.THREE.VRControls) {
   global.THREE.VRControls = require('./VRControls');
 }
 
+if (!global.RayInput) {
+  global.RayInput = require('./ray-input');
+}
+
 require('./webvr-polyfill');

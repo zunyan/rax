@@ -122,7 +122,7 @@ class Demo {
 }
 
 class DemoVR extends Demo {
-  constructor() {
+  constructor () {
     super();
 
     this._onResize = this._onResize.bind(this);
@@ -134,6 +134,7 @@ class DemoVR extends Demo {
       return;
     }
 
+    this._isShowingPressButtonModal = false;
     this._firstVRFrame = false;
     this._button = undefined;
     this._vr = {
@@ -142,10 +143,17 @@ class DemoVR extends Demo {
     };
 
     this._addVREventListeners();
-    this._getDisplays();
+    this._getDisplays().then(_ => {
+      // Get any available inputs.
+      this._getInput();
+      this._addInputEventListeners();
+
+      // Default the box to 'deselected'.
+      this._onDeselected(this._box);
+    });
   }
 
-  _addVREventListeners() {
+  _addVREventListeners () {
     window.addEventListener('vrdisplayactivate', _ => {
       this._activateVR();
     });
@@ -155,7 +163,7 @@ class DemoVR extends Demo {
     });
   }
 
-  _getDisplays() {
+  _getDisplays () {
     return navigator.getVRDisplays().then(displays => {
       // Filter down to devices that can present.
       displays = displays.filter(display => display.capabilities.canPresent);
@@ -176,25 +184,100 @@ class DemoVR extends Demo {
     });
   }
 
-  _showNoPresentError() {
+  _getInput () {
+    this._rayInput = new RayInput(this._camera, this._renderer.domElement);
+    this._onResize();
+  }
+
+  _addInputEventListeners () {
+    // Track the box for ray inputs.
+    this._rayInput.add(this._box);
+
+    // Set up a bunch of event listeners.
+    this._rayInput.on('rayover', this._onSelected);
+    this._rayInput.on('rayout', this._onDeselected);
+    this._rayInput.on('raydown', this._onSelected);
+    this._rayInput.on('rayup', this._onDeselected);
+  }
+
+  _onSelected (optMesh) {
+    if (!optMesh) {
+      return;
+    }
+
+    optMesh.material.transparent = true;
+    optMesh.material.opacity = 1;
+  }
+
+  _onDeselected (optMesh) {
+    if (!optMesh) {
+      return;
+    }
+
+    optMesh.material.transparent = true;
+    optMesh.material.opacity = 0.5;
+  }
+
+  _onResize () {
+    super._onResize();
+
+    if (!this._rayInput) {
+      return;
+    }
+
+    this._rayInput.setSize(this._renderer.getSize());
+  }
+
+  _showNoPresentError () {
     console.error(`Unable to present with this device ${this._vr.display}`);
   }
 
-  _showWebVRNotSupportedError() {
+  _showWebVRNotSupportedError () {
     console.error('WebVR not supported');
   }
 
-  _createPresentationButton() {
+  _createPresentationButton () {
     this._button = document.createElement('button');
     this._button.classList.add('vr-toggle');
     this._button.textContent = 'Enable VR';
     this._button.addEventListener('click', _ => {
+      debugger
       this._toggleVR();
-    });
+    }, true);
+
     document.body.appendChild(this._button);
   }
 
-  _deactivateVR() {
+  _showPressButtonModal () {
+    // Get the message texture, but disable mipmapping so it doesn't look blurry
+    const map = new THREE.TextureLoader().load('./images/press-button.jpg');
+    map.generateMipmaps = false;
+    map.minFilter = THREE.LinearFilter;
+    map.magFilter = THREE.LinearFilter;
+
+    // Create the sprite and place it into the scene.
+    const material = new THREE.SpriteMaterial({
+      map, color: 0xFFFFFF
+    });
+    this._modal = new THREE.Sprite(material);
+    this._modal.position.z = -4;
+    this._modal.scale.x = 2;
+    this._modal.scale.y = 2;
+
+    this._scene.add(this._modal);
+
+    // Finally set a flag so we can pick this up in the _render function.
+    this._isShowingPressButtonModal = true;
+  }
+
+  _hidePressButtonModal () {
+    this._scene.remove(this._modal);
+    this._modal = null;
+    this._isShowingPressButtonModal = false;
+    this._scene.add(this._rayInput.getMesh());
+  }
+
+  _deactivateVR () {
     if (!this._vr.display) {
       return;
     }
@@ -204,23 +287,29 @@ class DemoVR extends Demo {
     }
 
     this._vr.display.exitPresent();
+    this._onResize();
+    this._hidePressButtonModal();
     return;
   }
 
-  _activateVR() {
+  _activateVR () {
     if (!this._vr.display) {
       return;
     }
 
+    this._firstVRFrame = true;
     this._vr.display.requestPresent([{
       source: this._renderer.domElement
     }])
+    .then(_ => {
+      this._showPressButtonModal();
+    })
     .catch(e => {
       console.error(`Unable to init VR: ${e}`);
     });
   }
 
-  _toggleVR() {
+  _toggleVR () {
     if (this._vr.display.isPresenting) {
       return this._deactivateVR();
     }
@@ -228,10 +317,18 @@ class DemoVR extends Demo {
     return this._activateVR();
   }
 
-  _render() {
+  _render () {
+    if (this._rayInput) {
+      if (this._isShowingPressButtonModal &&
+        this._rayInput.controller.wasGamepadPressed) {
+        this._hidePressButtonModal();
+      }
+
+      this._rayInput.update();
+    }
+
     if (this._disabled || !(this._vr.display && this._vr.display.isPresenting)) {
       // Ensure that we switch everything back to auto for non-VR mode.
-      this._onResize();
       this._renderer.autoClear = true;
       this._scene.matrixAutoUpdate = true;
 
@@ -297,7 +394,7 @@ class DemoVR extends Demo {
     this._vr.display.submitFrame();
   }
 
-  _renderEye(viewMatrix, projectionMatrix, viewport) {
+  _renderEye (viewMatrix, projectionMatrix, viewport) {
     // Set the left or right eye half.
     this._renderer.setViewport(viewport.x, viewport.y, viewport.w, viewport.h);
 
