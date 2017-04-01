@@ -1,3 +1,5 @@
+/* global webkitRequestAnimationFrame */
+
 const synchronousScheduler = job => job();
 
 const requestAnimationFramePolyfill = job => setTimeout(job, 16);

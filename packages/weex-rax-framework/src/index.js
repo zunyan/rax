@@ -1,5 +1,7 @@
 'use strict';
 
+/* global WXEnvironment */
+
 import {ModuleFactories} from './builtin';
 import EventEmitter from './emitter';
 

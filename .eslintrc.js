@@ -50,8 +50,8 @@ module.exports = {
     "__weex_downgrade__": true,
     "__weex_define__": true,
     "__weex_require__": true,
+    "__weex_document__": true,
     "WXEnvironment": true,
-    "webkitRequestAnimationFrame": true,
     "jasmine": true
   },
 

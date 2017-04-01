@@ -179,6 +179,30 @@ dist(getConfig(
 
   dist(getConfig(
     {
+      'framework.webvr': './packages/webvr-rax-framework/src/index.js',
+      'framework.webvr.min': './packages/webvr-rax-framework/src/index.js'
+    },
+    {
+      path: './packages/webvr-rax-framework/dist/',
+      filename: '[name].js',
+      sourceMapFilename: '[name].map',
+      pathinfo: false,
+    },
+    {
+      target: 'bundle',
+      bundle: null,
+      frameworkComment: '',
+    },
+    {
+      presets: ['es2015'],
+      ignore: [
+        'dist/'
+      ]
+    }
+  ));
+
+  dist(getConfig(
+    {
       'framework.weex': './packages/weex-rax-framework/src/index.js'
     },
     {

@@ -1,0 +1,18 @@
+{
+  "name": "webvr-rax-framework",
+  "version": "0.0.3",
+  "description": "Rax framework for WebVR.",
+  "license": "BSD-3-Clause",
+  "main": "dist/framework.webvr.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alibaba/rax.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alibaba/rax/issues"
+  },
+  "homepage": "https://github.com/alibaba/rax#readme",
+  "dependencies": {
+    "three": "^0.84.0"
+  }
+}
