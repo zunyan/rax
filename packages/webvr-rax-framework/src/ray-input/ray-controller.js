@@ -183,7 +183,7 @@ export default class RayController extends EventEmitter {
     this.emit('raydown');
 
     // Prevent synthetic mouse event from being created.
-    e.preventDefault();
+    // e.preventDefault();
   }
 
   onTouchMove_(e) {
@@ -191,14 +191,14 @@ export default class RayController extends EventEmitter {
     this.updateDragDistance_();
 
     // Prevent synthetic mouse event from being created.
-    e.preventDefault();
+    // e.preventDefault();
   }
 
   onTouchEnd_(e) {
     this.endDragging_();
 
     // Prevent synthetic mouse event from being created.
-    e.preventDefault();
+    // e.preventDefault();
     this.isTouchActive = false;
   }
 

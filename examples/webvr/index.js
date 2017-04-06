@@ -241,9 +241,8 @@ class DemoVR extends Demo {
     this._button.classList.add('vr-toggle');
     this._button.textContent = 'Enable VR';
     this._button.addEventListener('click', _ => {
-      debugger
       this._toggleVR();
-    }, true);
+    }, false);
 
     document.body.appendChild(this._button);
   }
