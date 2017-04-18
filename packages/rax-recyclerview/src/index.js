@@ -11,6 +11,10 @@ class Cell extends PureComponent {
     isInARecyclerView: PropTypes.bool
   };
 
+  state = {
+    loadmoreretry: 0,
+  };
+
   render() {
     if (isWeex && this.context.isInARecyclerView) {
       return <cell {...this.props} append="tree" />;
@@ -44,6 +48,15 @@ class RecyclerView extends Component {
     isInARecyclerView: PropTypes.bool
   };
 
+  loadmoreretry = 1;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      loadmoreretry: 0,
+    };
+  }
+
   getChildContext() {
     return {
       isInARecyclerView: true
@@ -59,6 +72,16 @@ class RecyclerView extends Component {
       }
     };
     this.props.onScroll(e);
+  }
+
+  resetScroll = () => {
+    if (isWeex) {
+      this.setState({
+        loadmoreretry: this.loadmoreretry++,
+      });
+    } else {
+      this.refs.scrollview.resetScroll();
+    }
   }
 
   scrollTo = (options) => {
@@ -104,6 +127,7 @@ class RecyclerView extends Component {
           style={props.style}
           onLoadmore={props.onEndReached}
           onScroll={props.onScroll ? this.handleScroll : null}
+          loadmoreretry={this.state.loadmoreretry}
           loadmoreoffset={props.onEndReachedThreshold}
         >
           {cells}
