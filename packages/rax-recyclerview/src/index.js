@@ -11,10 +11,6 @@ class Cell extends PureComponent {
     isInARecyclerView: PropTypes.bool
   };
 
-  state = {
-    loadmoreretry: 0,
-  };
-
   render() {
     if (isWeex && this.context.isInARecyclerView) {
       return <cell {...this.props} append="tree" />;
