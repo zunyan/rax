@@ -182,7 +182,7 @@ class ScrollView extends Component {
     if (isWeex) {
       return (
         <scroller
-          {...props}
+          {...this.props}
           style={scrollerStyle}
           showScrollbar={showsScrollIndicator}
           onLoadmore={onEndReached}
