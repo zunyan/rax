@@ -18,6 +18,12 @@ class ListView extends Component {
     }
   }
 
+  resetScroll = () => {
+    if (this.refs[SCROLLVIEW_REF]) {
+      this.refs[SCROLLVIEW_REF].resetScroll();
+    }
+  }
+
   render() {
     let {
       renderScrollComponent,

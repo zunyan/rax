@@ -119,8 +119,7 @@ class RecyclerView extends Component {
 
       return (
         <list
-          id={props.id}
-          style={props.style}
+          {...props}
           onLoadmore={props.onEndReached}
           onScroll={props.onScroll ? this.handleScroll : null}
           loadmoreretry={this.state.loadmoreretry}
