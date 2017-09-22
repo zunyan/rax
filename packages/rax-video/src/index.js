@@ -5,12 +5,21 @@ const PLAY = 'play';
 const PAUSE = 'pause';
 
 class Video extends Component {
+  
+  play(){
+    this.refs.video.play();
+  }
+
+  pause(){
+    this.refs.video.pause();
+  }
+
   render() {
     let props = this.props;
 
     if (isWeex) {
       props.playStatus = props.playControl;
-      return <video {...props} />;
+      return <video ref="video" {...props} />;
     } else {
       let nativeProps = {
         ...props
